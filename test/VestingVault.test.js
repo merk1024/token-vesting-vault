@@ -128,8 +128,6 @@ describe("VestingVault", function () {
       vault.release(1)
     ).to.be.revertedWith("nothing to release");
   });
-
-  it("12. Owner can revoke a revocable schedule", async function () {
     
 it("12. Owner can revoke a revocable schedule", async function () {
   await createSchedule();
