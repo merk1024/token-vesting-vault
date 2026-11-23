@@ -130,17 +130,24 @@ describe("VestingVault", function () {
   });
 
   it("12. Owner can revoke a revocable schedule", async function () {
-    await createSchedule();
-    await time.increaseTo(start + 500);
+    
+it("12. Owner can revoke a revocable schedule", async function () {
+  await createSchedule();
+  await time.increaseTo(start + 500);
 
-    const before = await token.balanceOf(owner.address);
+  const before = await token.balanceOf(owner.address);
 
-    await vault.revoke(1);
+  await vault.revoke(1);
 
-    const schedule = await vault.schedules(1);
-    expect(schedule.revoked).to.equal(true);
-    expect(await token.balanceOf(owner.address)).to.equal(
-      before + AMOUNT / 2n
+  const schedule = await vault.schedules(1);
+  expect(schedule.revoked).to.equal(true);
+
+  const elapsed = schedule.revokedAt - BigInt(start);
+  const vested = (AMOUNT * elapsed) / BigInt(DURATION);
+  const unvested = AMOUNT - vested;
+
+  expect(await token.balanceOf(owner.address)).to.equal(
+    before + unvested
     );
   });
 
